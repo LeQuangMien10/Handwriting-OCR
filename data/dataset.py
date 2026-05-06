@@ -19,7 +19,7 @@ class OCRDataset(Dataset):
 
                 if os.path.exists(txt_path):
                     with open(txt_path, "r", encoding="utf-8") as f:
-                        text = f.read()
+                        text = f.read().strip()
                     self.samples.append((img_path, text))
 
         # sort samples width-wise
