@@ -40,9 +40,16 @@ class OCRDataset(Dataset):
 
         # resize height = 32
         h, w, _ = img.shape
-        new_h = IMG_HEIGHT
-        new_w = int(w * (new_h / h))
-        img = cv2.resize(img, (new_w, new_h))
+        new_h = 32
+        scale = new_h / h
+        new_w = int(w * scale)
+
+        if scale < 1:
+            interp = cv2.INTER_AREA
+        else:
+            interp = cv2.INTER_CUBIC
+
+        img = cv2.resize(img, (new_w, new_h), interpolation=interp)
 
         if self.transform:
             img = self.transform(image=img)["image"]
@@ -56,6 +63,7 @@ class OCRDataset(Dataset):
             img = img.float()
 
         img = img.permute(2, 0, 1)
+
         label = self.encode_text(text)
 
         return img, torch.tensor(label), len(label)
