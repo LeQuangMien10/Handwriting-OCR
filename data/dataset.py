@@ -40,17 +40,22 @@ class OCRDataset(Dataset):
 
         # resize height = 32
         h, w, _ = img.shape
-
         new_h = IMG_HEIGHT
         new_w = int(w * (new_h / h))
-        # img = cv2.resize(img, (new_w, new_h))
+        img = cv2.resize(img, (new_w, new_h))
 
         if self.transform:
             img = self.transform(image=img)["image"]
 
         # normalize
-        img = torch.tensor(img).permute(2, 0, 1).float() / 255.0
+        img = torch.from_numpy(img)
 
+        if img.max() > 1:
+            img = img.float() / 255.0
+        else:
+            img = img.float()
+
+        img = img.permute(2, 0, 1)
         label = self.encode_text(text)
 
         return img, torch.tensor(label), len(label)
