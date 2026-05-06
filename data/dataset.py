@@ -23,7 +23,7 @@ class OCRDataset(Dataset):
                     self.samples.append((img_path, text))
 
         # sort samples width-wise
-        self.samples.sort(key=lambda x: len(x[1]))
+        # self.samples.sort(key=lambda x: len(x[1]))
 
     def __len__(self):
         return len(self.samples)
