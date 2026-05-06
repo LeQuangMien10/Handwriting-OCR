@@ -43,12 +43,7 @@ class OCRDataset(Dataset):
 
         new_h = IMG_HEIGHT
         new_w = int(w * (new_h / h))
-
-        if h < 32:
-            pad_h = 32 - h
-            img = cv2.copyMakeBorder(img, 0, pad_h, 0, 0, cv2.BORDER_CONSTANT)
-        else:
-            img = cv2.resize(img, (new_w, 32))
+        # img = cv2.resize(img, (new_w, new_h))
 
         if self.transform:
             img = self.transform(image=img)["image"]
