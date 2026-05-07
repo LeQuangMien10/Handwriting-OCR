@@ -37,6 +37,8 @@ class CRNN(nn.Module):
 
             nn.Conv2d(512, 512, 2, padding=1),
             nn.ReLU(),
+
+            nn.AdaptiveAvgPool2d((1, None))
         )
 
         # BiLSTM
