@@ -1,10 +1,11 @@
+import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from data.dataset import OCRDataset
 from data.collate import collate_fn
 from data.vocab import ALL_CHARS
-from data.transforms import get_train_transform
+# from data.transforms import get_train_transform
 
 from models.crnn import CRNN
 
