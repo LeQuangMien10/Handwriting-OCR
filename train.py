@@ -1,3 +1,4 @@
+import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from data.dataset import OCRDataset
@@ -25,14 +26,40 @@ def main():
 
     model = CRNN(num_classes=len(ALL_CHARS) + 1)
 
-    print(model)
+    # print(model)
 
-    imgs, labels, lengths = next(iter(train_loader))
+    imgs, labels, label_lengths = next(iter(train_loader))
+
+    print("Images:", imgs.shape)
 
     outputs = model(imgs)
 
-    print(outputs.shape)
+    print("Model outputs:", outputs.shape)
 
+    log_probs = outputs.log_softmax(2)
+
+    input_lengths = torch.full(
+        size=(imgs.size(0),),
+        fill_value=outputs.size(0),
+        dtype=torch.long,
+    )
+
+    print("Input lengths:", input_lengths)
+    print("Label lengths:", label_lengths)
+
+    criterion = nn.CTCLoss(
+        blank=0,
+        zero_infinity=True
+    )
+
+    loss = criterion(
+        log_probs,
+        labels,
+        input_lengths,
+        label_lengths,
+    )
+
+    print("CTC Loss:", loss.item())
 
 if __name__ == '__main__':
     main()
